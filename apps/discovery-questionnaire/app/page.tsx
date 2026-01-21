@@ -15,14 +15,50 @@ export default function Home() {
   useEffect(() => {
     if (isAuthenticated && accounts.length > 0) {
       const account = accounts[0];
-      const email = account.username;
-      const domain = email.split("@")[1];
-      const allowedDomain = process.env.NEXT_PUBLIC_CLIENT_EMAIL_DOMAIN;
-
-      if (allowedDomain && domain.toLowerCase() !== allowedDomain.toLowerCase()) {
-        alert(`Access restricted to ${allowedDomain} email addresses.`);
-        instance.logout();
-        return;
+      
+      // Determine user identity string (prefer email, fallback to username/userPrincipalName)
+      const identity = (account as any).email || account.username || "";
+      
+      // Normalize allowlist: support NEXT_PUBLIC_ALLOWED_EMAIL_DOMAINS (comma-separated) or fallback to NEXT_PUBLIC_CLIENT_EMAIL_DOMAIN
+      const allowedDomainsEnv = process.env.NEXT_PUBLIC_ALLOWED_EMAIL_DOMAINS || process.env.NEXT_PUBLIC_CLIENT_EMAIL_DOMAIN || "";
+      const allowedDomains = allowedDomainsEnv
+        .split(",")
+        .map(d => d.trim().toLowerCase())
+        .filter(d => d.length > 0);
+      
+      if (allowedDomains.length > 0) {
+        // Extract effective domain from identity
+        let effectiveDomain = "";
+        const id = identity.toLowerCase().trim();
+        
+        // Handle B2B guest identities: e.g., "joel_mikkelsen_fusion5.com.au#ext#@fusion5.onmicrosoft.com"
+        if (id.includes("#ext#") && id.endsWith(".onmicrosoft.com")) {
+          const left = id.split("#ext#")[0];
+          const lastUnderscore = left.lastIndexOf("_");
+          if (lastUnderscore >= 0) {
+            effectiveDomain = left.substring(lastUnderscore + 1);
+          } else {
+            // Fallback: try to extract domain before #ext#
+            effectiveDomain = left;
+          }
+        } else {
+          // Standard email format: extract domain after @
+          const atIndex = id.indexOf("@");
+          if (atIndex >= 0) {
+            effectiveDomain = id.substring(atIndex + 1);
+          } else {
+            effectiveDomain = id;
+          }
+        }
+        
+        // Compare domain against allowlist (case-insensitive)
+        const isAllowed = allowedDomains.some(allowed => effectiveDomain === allowed);
+        
+        if (!isAllowed) {
+          alert(`Detected domain: ${effectiveDomain}. Access restricted to: ${allowedDomains.join(", ")}.`);
+          instance.logout();
+          return;
+        }
       }
 
       setIsChecking(false);

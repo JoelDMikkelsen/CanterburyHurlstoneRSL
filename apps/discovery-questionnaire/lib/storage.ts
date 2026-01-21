@@ -36,7 +36,61 @@ export async function getResponse(userId: string): Promise<QuestionnaireResponse
   try {
     const client = await getTableClient();
     const entity = await client.getEntity("responses", userId);
-    return entity as unknown as QuestionnaireResponse;
+    
+    // Parse JSON string fields back to objects with safe fallbacks
+    let progress: Progress;
+    try {
+      if (entity.progressJson) {
+        progress = JSON.parse(entity.progressJson as string);
+      } else if (entity.progress) {
+        progress = entity.progress as Progress;
+      } else {
+        progress = { totalSections: 10, completedSections: 0, percentComplete: 0, currentSection: 1 };
+      }
+    } catch {
+      progress = { totalSections: 10, completedSections: 0, percentComplete: 0, currentSection: 1 };
+    }
+    
+    let sections: { [key: string]: SectionState };
+    try {
+      if (entity.sectionsJson) {
+        sections = JSON.parse(entity.sectionsJson as string);
+      } else if (entity.sections) {
+        sections = entity.sections as { [key: string]: SectionState };
+      } else {
+        sections = {};
+      }
+    } catch {
+      sections = {};
+    }
+    
+    let metadata: { userEmail: string; userName: string };
+    try {
+      if (entity.metadataJson) {
+        metadata = JSON.parse(entity.metadataJson as string);
+      } else if (entity.metadata) {
+        metadata = entity.metadata as { userEmail: string; userName: string };
+      } else {
+        metadata = { userEmail: "", userName: "" };
+      }
+    } catch {
+      metadata = { userEmail: "", userName: "" };
+    }
+    
+    const response: QuestionnaireResponse = {
+      id: entity.id as string,
+      partitionKey: entity.partitionKey as string,
+      rowKey: entity.rowKey as string,
+      timestamp: entity.timestamp as string,
+      lastUpdated: entity.lastUpdated as string,
+      startedAt: entity.startedAt as string,
+      completedAt: (entity.completedAt as string) || null,
+      progress,
+      sections,
+      metadata,
+    };
+    
+    return response;
   } catch (error: any) {
     if (error.statusCode === 404) {
       return null;
@@ -50,7 +104,14 @@ export async function saveResponse(response: QuestionnaireResponse): Promise<voi
   const entity = {
     partitionKey: response.partitionKey,
     rowKey: response.rowKey,
-    ...response,
+    id: response.id,
+    timestamp: response.timestamp,
+    lastUpdated: response.lastUpdated,
+    startedAt: response.startedAt,
+    completedAt: response.completedAt || null,
+    progressJson: JSON.stringify(response.progress ?? {}),
+    sectionsJson: JSON.stringify(response.sections ?? {}),
+    metadataJson: JSON.stringify(response.metadata ?? {}),
   };
   await client.upsertEntity(entity, "Replace");
 }

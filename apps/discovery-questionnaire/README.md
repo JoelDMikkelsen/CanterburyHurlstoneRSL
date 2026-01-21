@@ -50,7 +50,7 @@ This questionnaire is designed to gather high-quality context before an on-site 
    # Azure AD / MSAL Configuration
    NEXT_PUBLIC_AZURE_CLIENT_ID=your-client-id
    NEXT_PUBLIC_AZURE_TENANT_ID=your-tenant-id
-   NEXT_PUBLIC_AZURE_REDIRECT_URI=http://localhost:3000
+   NEXT_PUBLIC_AZURE_REDIRECT_URI=http://localhost:3001
 
    # Client Email Domain Restriction
    NEXT_PUBLIC_CLIENT_EMAIL_DOMAIN=clientdomain.com
@@ -64,7 +64,7 @@ This questionnaire is designed to gather high-quality context before an on-site 
 
    In Azure Portal:
    - Register a new app in Azure AD / Entra ID
-   - Add a redirect URI: `http://localhost:3000` (for local dev)
+   - Add a redirect URI: `http://localhost:3001` (for local dev)
    - Enable B2B guest access if needed
    - Grant "User.Read" API permission (Microsoft Graph)
 
@@ -80,7 +80,7 @@ This questionnaire is designed to gather high-quality context before an on-site 
    npm run dev
    ```
 
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
+   Open [http://localhost:3001](http://localhost:3001) in your browser.
 
 ### Development Commands
 
