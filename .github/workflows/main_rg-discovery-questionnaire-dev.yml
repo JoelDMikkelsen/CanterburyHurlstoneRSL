@@ -31,9 +31,11 @@ jobs:
           cache-dependency-path: apps/discovery-questionnaire/package-lock.json
 
       - name: Install dependencies
+        working-directory: apps/discovery-questionnaire
         run: npm ci
 
       - name: Build Next.js app
+        working-directory: apps/discovery-questionnaire
         run: npm run build
         env:
           NEXT_PUBLIC_AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
