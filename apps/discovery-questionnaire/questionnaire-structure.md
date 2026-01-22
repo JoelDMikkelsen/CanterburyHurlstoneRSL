@@ -3,354 +3,339 @@
 ## Overview
 This questionnaire is designed to gather context for evaluating NetSuite vs Microsoft Dynamics 365 Business Central. It focuses on understanding business complexity, integration needs, and operational requirements—not making final design decisions.
 
-**Target completion time:** 45-60 minutes total
+**Target completion time:** 60-75 minutes total
 
 ---
 
 ## Section 1: Organisation & Entity Structure
-**Estimated time: 5-7 minutes**
+**Estimated time: 8 minutes**
 
 **Purpose:** Understand the multi-entity complexity, consolidation needs, and reporting structure. This helps determine if advanced multi-entity capabilities are required.
 
 ### Questions:
-1. How many separate legal entities or subsidiaries do you operate?
-   - Type: Multiple choice (1-2, 3-5, 6-10, 10+)
-   - Helper: "This helps us understand consolidation complexity. Some systems handle multi-entity reporting better than others."
+1. How many legal entities, operating entities, and reporting entities exist today?
+   - Type: Free text
+   - Helper: "Understanding entity structure helps determine consolidation complexity."
 
-2. Do you need separate financial reporting (P&L, Balance Sheet) for each entity?
+2. For each entity/site, do you require separate:
+   - Type: Multiple select
+   - Options: Bank accounts and payment runs, Vendor agreements and pricing, Inventory valuation, Payroll cost allocation, Statutory vs management reporting
+   - Helper: "Separate requirements per entity affect ERP configuration and licensing."
+
+3. Do entities transact with each other (shared services, recharges, staff, inventory transfers)?
+   - Type: Multiple choice
+   - Options: Rare, Monthly, Weekly, Daily, No inter-entity transactions
+   - Helper: "Inter-entity transactions require sophisticated ERP capabilities."
+
+4. Do intercompany transactions require automated elimination and balancing at close?
    - Type: Yes/No with follow-up
-   - Follow-up: "How many entities need individual reporting?"
-   - Helper: "Multi-entity consolidation is a key differentiator between ERP platforms."
+   - Helper: "Automated elimination is critical for accurate consolidated reporting."
 
-3. Do you operate across multiple locations or sites?
-   - Type: Yes/No with count
-   - Helper: "Understanding your geographic footprint helps assess data access and performance requirements."
+5. Do entities require different fiscal calendars or reporting periods?
+   - Type: Yes/No with follow-up
+   - Helper: "Different fiscal calendars add complexity to consolidation."
 
-4. What is your current organisational structure?
-   - Type: Multiple choice (Single entity, Multiple entities under one parent, Independent entities, Other)
-   - Helper: "This impacts how we structure the ERP and reporting."
-
-5. Do you have shared services or centralised functions across entities?
-   - Type: Yes/No with examples (free text)
-   - Helper: "Shared services often require inter-entity transactions and allocation methods."
+6. Do entities share a common chart of accounts, or diverge materially?
+   - Type: Yes/No with follow-up
+   - Helper: "Chart of accounts alignment affects reporting and consolidation."
 
 ---
 
 ## Section 2: Finance & Accounting Complexity
-**Estimated time: 6-8 minutes**
+**Estimated time: 7 minutes**
 
-**Purpose:** Assess financial complexity, chart of accounts structure, and accounting requirements. NetSuite typically handles complex multi-entity finance better.
+**Purpose:** Assess financial complexity, close processes, and accounting requirements.
 
 ### Questions:
-1. How many chart of accounts segments do you currently use?
-   - Type: Multiple choice (Simple single COA, Multiple COAs by entity, Segmented COA, Complex multi-dimensional)
-   - Helper: "Chart of accounts complexity affects implementation effort and reporting flexibility."
+7. Current month-end close duration:
+   - Type: Multiple choice
+   - Options: <3 days, 3–5 days, 6–10 days, 10+ days
+   - Helper: "Close duration indicates process efficiency and system capability."
 
-2. What is your current accounting system?
-   - Type: Multiple choice (Adept, MYOB, Xero, Sage, Other legacy system, Spreadsheets)
-   - Helper: "Understanding your current system helps us plan migration complexity."
+8. Primary contributors to close delays (select all that apply):
+   - Type: Multiple select
+   - Options: Intercompany eliminations, Manual journals, Reconciliations, External system data delays, Approval bottlenecks
+   - Helper: "Understanding close bottlenecks helps prioritize ERP capabilities."
 
-3. How many years of historical financial data do you need to migrate?
-   - Type: Multiple choice (Opening balances only, 1-2 years, 3-5 years, 5+ years)
-   - Helper: "Historical data migration affects timeline and cost."
+9. Do you expect close effort to improve, stay the same, or worsen as the business grows?
+   - Type: Multiple choice
+   - Options: Improve, Stay the same, Worsen
+   - Helper: "Growth expectations affect scalability requirements."
 
-4. Do you require multi-currency accounting?
-   - Type: Yes/No with currency list
-   - Helper: "Multi-currency is standard in modern ERPs, but complexity varies."
+10. Do you require multiple reporting books or parallel ledgers (e.g. management vs statutory)?
+    - Type: Yes/No with follow-up
+    - Helper: "Multiple books require sophisticated ERP capabilities."
 
-5. What is your financial reporting frequency?
-   - Type: Multiple choice (Monthly, Quarterly, Annually, Real-time/Ad-hoc)
-   - Helper: "Reporting frequency impacts system performance and user access patterns."
-
-6. Do you have complex revenue recognition requirements?
-   - Type: Scale 1-5 (Simple cash basis → Complex multi-element arrangements)
-   - Helper: "Revenue recognition complexity can drive customisation needs."
-
-7. How many open accounts payable and accounts receivable transactions do you typically have?
-   - Type: Multiple choice (<100, 100-500, 500-2000, 2000+)
-   - Helper: "Transaction volume affects migration planning and system performance."
+11. Is multi-currency required now or within the next 3 years?
+    - Type: Yes/No with follow-up
+    - Helper: "Multi-currency affects ERP selection and implementation complexity."
 
 ---
 
-## Section 3: Operations (Hospitality, Gaming, POS)
-**Estimated time: 7-9 minutes**
+## Section 3: Operations – Hospitality, Gaming, POS
+**Estimated time: 10 minutes**
 
-**Purpose:** Understand operational complexity specific to RSL clubs—hospitality, gaming, and point-of-sale operations. These are industry-specific requirements.
+**Purpose:** Understanding operational complexity specific to RSL clubs—hospitality, gaming, and point-of-sale operations.
 
 ### Questions:
-1. How many point-of-sale (POS) locations do you operate?
-   - Type: Number input with location types
-   - Helper: "POS integration complexity varies significantly between ERP platforms."
+12. Approximate daily transaction volumes generated by operations:
+    - Type: Multiple choice
+    - Options: <1k, 1k–5k, 5k–20k, 20k+
+    - Helper: "Transaction volume affects system performance and integration architecture."
 
-2. What POS systems do you currently use?
-   - Type: Multiple select (SwiftPOS, Other, None)
-   - Follow-up: "Do you plan to keep SwiftPOS or replace it?"
-   - Helper: "POS integration is critical for hospitality operations and affects ERP selection."
+13. Are transactions posted to finance as:
+    - Type: Multiple choice
+    - Options: Fully summarised, Mixed, Line-level detail
+    - Helper: "Transaction detail level affects ERP data model and reporting capabilities."
 
-3. Do you operate gaming machines (pokies)?
-   - Type: Yes/No
-   - Follow-up: "What gaming system do you use?" (IGT Gaming, Other)
-   - Helper: "Gaming system integration requires real-time transaction handling."
+14. Do you need the ability to reprocess or replay operational data (e.g. corrected gaming files)?
+    - Type: Yes/No with follow-up
+    - Helper: "Reprocessing capability affects integration design and data architecture."
 
-4. How many gaming machines do you operate across all locations?
-   - Type: Number input
-   - Helper: "Gaming transaction volume affects integration architecture."
+15. Do you require revenue analysis by:
+    - Type: Multiple select
+    - Options: Venue / outlet, Department, Event, Member vs non-member, Promotions / comps, Tender type
+    - Helper: "Revenue analysis dimensions affect reporting and data model requirements."
 
-5. Do you have kitchen/hospitality management systems?
-   - Type: Yes/No
-   - Follow-up: "Which system?" (Cooking the Books, Other)
-   - Helper: "Kitchen systems often require inventory and cost management integration."
+16. Cash room requirements:
+    - Type: Multiple choice
+    - Options: Same-day ERP visibility required, Next-day acceptable
+    - Helper: "Cash visibility requirements affect integration timing and architecture."
 
-6. How do you currently track inventory across your operations?
-   - Type: Multiple choice (Manual/spreadsheets, Separate inventory system, Part of POS, Not tracked)
-   - Helper: "Inventory management complexity affects ERP module requirements."
+17. Do you require reconciliation across cash, EFTPOS, gaming, kiosks, vouchers with exception workflows?
+    - Type: Yes/No with follow-up
+    - Helper: "Reconciliation complexity affects workflow design and automation requirements."
 
-7. What is your typical inventory turnover?
-   - Type: Multiple choice (Daily, Weekly, Monthly, Seasonal)
-   - Helper: "Inventory turnover frequency impacts real-time vs batch integration needs."
+18. Gaming integration requirements:
+    - Type: Multiple select
+    - Options: Daily summary only, Transaction-level detail, Regulatory or audit retention requirements
+    - Helper: "Gaming integration requirements affect data architecture and retention policies."
 
-8. Do you need real-time inventory visibility across locations?
-   - Type: Yes/No with scale (Nice to have → Critical)
-   - Helper: "Real-time inventory requires robust integration architecture."
+19. Inventory and kitchen operations:
+    - Type: Multiple select
+    - Options: Recipe-level consumption and wastage tracking required, ERP should be source of truth for stock, Kitchen system should be source of truth for stock, Other system should be source of truth
+    - Helper: "Kitchen operations affect inventory management and cost tracking requirements."
 
 ---
 
-## Section 4: Procure to Pay & Expenses
-**Estimated time: 5-7 minutes**
+## Section 4: Users, Roles & Access Model
+**Estimated time: 8 minutes**
 
-**Purpose:** Understand procurement processes, approval workflows, and expense management. This helps assess automation needs.
+**Purpose:** Understanding user roles, access requirements, and security model.
 
 ### Questions:
-1. How do you currently manage purchase orders?
-   - Type: Multiple choice (Paper-based, Email, Spreadsheet, System-based)
-   - Helper: "PO automation is a key ERP benefit and affects implementation scope."
+20. For each role group (Finance, Venue Managers, Dept Heads, HR/Payroll, Exec/Board, Audit), specify access requirements:
+    - Type: Free text
+    - Helper: "Role-based access affects licensing, security design, and workflow configuration."
 
-2. Do you have purchase approval workflows?
-   - Type: Yes/No with complexity scale
-   - Helper: "Approval workflows can be configured or require customisation depending on complexity."
+21. Do you require external or non-employee access (auditors, board, consultants)?
+    - Type: Yes/No with follow-up
+    - Helper: "External access affects authentication and licensing requirements."
 
-3. Are you using or planning to use Medius for procure-to-pay?
-   - Type: Yes/No with status (Planning, Partially deployed, Fully deployed)
-   - Helper: "Medius integration affects ERP selection and implementation phasing."
+22. Are there shared workstations or terminals used by multiple staff?
+    - Type: Yes/No with follow-up
+    - Helper: "Shared workstations affect authentication and session management."
 
-4. How do you currently manage employee expenses?
-   - Type: Multiple choice (Manual/paper, Email, Spreadsheet, System-based)
-   - Helper: "Expense management automation reduces manual work and improves compliance."
-
-5. How many purchase orders do you process per month?
-   - Type: Multiple choice (<50, 50-200, 200-500, 500+)
-   - Helper: "PO volume affects system performance and workflow design."
-
-6. Do you need multi-level approval workflows?
-   - Type: Yes/No with levels
-   - Helper: "Complex approval workflows may require customisation."
+23. Are there segregation-of-duties rules that must be enforced?
+    - Type: Yes/No with follow-up
+    - Helper: "Segregation of duties affects role design and workflow configuration."
 
 ---
 
-## Section 5: Payroll & Workforce
-**Estimated time: 5-6 minutes**
+## Section 5: Integrations & Data Flow
+**Estimated time: 10 minutes**
 
-**Purpose:** Understand payroll complexity and workforce management needs. This affects integration requirements.
+**Purpose:** Understanding integration volume, complexity, and real-time requirements.
 
 ### Questions:
-1. How many employees do you have across all entities?
-   - Type: Number input
-   - Helper: "Employee count affects licensing and integration volume."
+24. For each system (POS, gaming, HR/time, payroll, P2P, cash mgmt, kitchen, BI), specify:
+    - Type: Free text
+    - Helper: "Integration capabilities affect ERP selection and implementation approach."
 
-2. What payroll system do you currently use?
-   - Type: Multiple choice (MicroPay, Humanforce, Other, Manual)
-   - Helper: "Payroll integration is typically required for accurate financial reporting."
+25. Which data must be near real-time?
+    - Type: Multiple select
+    - Options: Sales, Cash, Payroll cost, Inventory, Approvals
+    - Helper: "Real-time requirements drive integration architecture decisions."
 
-3. Do you use time and attendance tracking?
-   - Type: Yes/No
-   - Follow-up: "Which system?" (Humanforce Time Target, Other)
-   - Helper: "Time tracking integration affects labour cost allocation and reporting."
+26. Approximate daily data volumes: POS line items / Gaming extracts / AP invoices / Timesheets
+    - Type: Free text
+    - Helper: "Data volumes affect integration infrastructure sizing and performance."
 
-4. Do you need payroll integration with the ERP?
-   - Type: Yes/No with requirements (free text)
-   - Helper: "Payroll integration ensures accurate labour cost reporting and financial consolidation."
+27. Integration failure handling: Who fixes failures today? Is non-technical retry important?
+    - Type: Free text
+    - Helper: "Failure handling affects integration design and user experience."
 
-5. How many pay runs do you process per month?
-   - Type: Multiple choice (Weekly, Fortnightly, Monthly, Multiple frequencies)
-   - Helper: "Payroll frequency affects integration scheduling and data volume."
+28. Who should own ongoing integration monitoring?
+    - Type: Free text
+    - Helper: "Integration ownership affects support model and responsibilities."
 
 ---
 
-## Section 6: Reporting, BI & FP&A
-**Estimated time: 6-8 minutes**
+## Section 6: Reporting, Planning & Analytics
+**Estimated time: 8 minutes**
 
-**Purpose:** Assess reporting maturity, BI needs, and financial planning requirements. NetSuite has stronger native analytics.
+**Purpose:** Assessing reporting maturity, BI needs, and financial planning requirements.
 
 ### Questions:
-1. How many different reporting or BI tools do you currently use?
-   - Type: Number input with tool names
-   - Helper: "Multiple BI tools indicate a need for better integrated reporting."
+29. Top operational reports required (venue managers).
+    - Type: Free text
+    - Helper: "Operational reporting requirements affect ERP reporting capabilities needed."
 
-2. What types of reports do you generate regularly?
-   - Type: Multiple select (Financial statements, Operational dashboards, Management reports, Compliance reports, Ad-hoc analysis)
-   - Helper: "Report types help determine if native ERP reporting is sufficient or if separate BI is needed."
+30. Top finance reports required (month-end).
+    - Type: Free text
+    - Helper: "Finance reporting requirements affect ERP configuration and reporting tools."
 
-3. Who needs access to financial reports?
-   - Type: Multiple select (Finance team, Management, Board, External stakeholders, All staff)
-   - Helper: "Report access requirements affect user licensing and security design."
+31. Top board/executive reports required.
+    - Type: Free text
+    - Helper: "Executive reporting affects dashboard and BI requirements."
 
-4. Do you need real-time or near-real-time reporting?
-   - Type: Yes/No with scale (Daily is fine → Real-time critical)
-   - Helper: "Real-time reporting requires robust data architecture and may favour cloud-native solutions."
+32. Where do most reporting rules live today?
+    - Type: Multiple choice
+    - Options: Spreadsheets, ERP, Separate reporting layer
+    - Helper: "Reporting location affects migration and configuration requirements."
 
-5. Do you do financial planning and forecasting?
-   - Type: Yes/No with frequency (Annual budget, Quarterly forecasts, Rolling forecasts, Not currently)
-   - Helper: "FP&A requirements may drive need for additional planning tools beyond core ERP."
+33. Do finance users need to self-build reports without IT involvement?
+    - Type: Yes/No with follow-up
+    - Helper: "Self-service reporting affects ERP selection and user training requirements."
 
-6. Do you need scenario modeling or "what-if" analysis?
-   - Type: Yes/No with complexity scale
-   - Helper: "Advanced planning features vary significantly between ERP platforms."
+34. How frequently is forecasting performed?
+    - Type: Multiple choice
+    - Options: Annual only, Quarterly, Rolling, Not currently
+    - Helper: "Forecasting frequency affects planning tool requirements."
 
-7. Are you considering a data warehouse or data lake?
-   - Type: Yes/No with approach (NetSuite analytics, Azure/Fabric, AWS, Other, Not sure)
-   - Helper: "Data warehouse architecture affects long-term analytics capabilities and integration complexity."
+35. Which system should be the authoritative source for:
+    - Type: Multiple select
+    - Options: Customer/member master, Product/item master, Employee master, COA and segments
+    - Helper: "Master data ownership affects integration design and data governance."
 
 ---
 
-## Section 7: Integrations & Data Architecture
-**Estimated time: 8-10 minutes**
+## Section 7: Payroll & Workforce Management
+**Estimated time: 5 minutes**
 
-**Purpose:** Understand integration volume, complexity, and real-time requirements. This is a key differentiator between platforms.
+**Purpose:** Understanding payroll complexity and workforce management needs.
 
 ### Questions:
-1. How many external systems need to integrate with your ERP?
-   - Type: Number input with system list (checkboxes: SwiftPOS, IGT Gaming, Humanforce, Medius, Cooking the Books, Bank feeds, Other)
-   - Helper: "Integration count and complexity significantly impacts ERP selection and implementation cost."
+36. Pay rule complexity: Awards, penalties, overtime, split shifts, allowances
+    - Type: Free text
+    - Helper: "Pay rule complexity affects payroll system requirements and integration needs."
 
-2. What is your current integration approach?
-   - Type: Multiple choice (Flat file transfers, APIs, Manual data entry, Mix of approaches)
-   - Helper: "Current integration methods help us plan migration and modernisation."
+37. Do you require daily roster vs actual labour variance reporting?
+    - Type: Yes/No with follow-up
+    - Helper: "Labour variance reporting affects integration and reporting requirements."
 
-3. Do you have an existing integration platform or middleware?
-   - Type: Yes/No with platform name (IAPI Direct Services, Other, None)
-   - Helper: "Existing integration platforms can be leveraged or may need replacement."
-
-4. How many transactions do your integrations process per day?
-   - Type: Multiple choice (<1,000, 1,000-10,000, 10,000-50,000, 50,000+)
-   - Helper: "Transaction volume affects integration architecture and performance requirements."
-
-5. Which integrations require real-time or near-real-time data?
-   - Type: Multiple select from integration list
-   - Helper: "Real-time requirements drive API-based integration architecture and may favour certain ERP platforms."
-
-6. Which systems can continue using flat file transfers?
-   - Type: Multiple select from integration list
-   - Helper: "Flat file integrations are simpler but less flexible than APIs."
-
-7. Do you need bank feed integration?
-   - Type: Yes/No with bank count
-   - Helper: "Bank feeds reduce manual reconciliation work and are standard in modern ERPs."
-
-8. What is your data volume for integrations (transactions per day/week)?
-   - Type: Free text with examples
-   - Helper: "Data volume helps size integration infrastructure and affects cost."
-
-9. Do you need API management or will you build point-to-point integrations?
-   - Type: Multiple choice (Point-to-point is fine, Need API management layer, Not sure)
-   - Helper: "API management becomes important with many integrations and affects architecture decisions."
+38. Timesheet approval complexity:
+    - Type: Multiple choice
+    - Options: Single level, Multi-level, Delegated approvals
+    - Helper: "Approval complexity affects workflow configuration requirements."
 
 ---
 
-## Section 8: Risk, Compliance & Governance
-**Estimated time: 5-6 minutes**
+## Section 8: Procure-to-Pay & Capex
+**Estimated time: 6 minutes**
 
-**Purpose:** Understand compliance requirements, audit needs, and governance structure. Both platforms handle this well, but approaches differ.
+**Purpose:** Understanding procurement processes, approval workflows, and capital expenditure tracking.
 
 ### Questions:
-1. What compliance or regulatory requirements do you need to meet?
-   - Type: Multiple select (Gaming regulations, Financial reporting standards, Tax compliance, Industry-specific, Other)
-   - Helper: "Compliance requirements affect system configuration and reporting needs."
+39. Approval rules vary by:
+    - Type: Multiple select
+    - Options: Entity, Venue, Category, Spend threshold, Capex vs opex
+    - Helper: "Approval complexity affects workflow configuration requirements."
 
-2. Do you need audit trails and change tracking?
-   - Type: Yes/No with requirements scale
-   - Helper: "Audit trails are standard but granularity requirements vary."
+40. Invoice processing requirements:
+    - Type: Multiple select
+    - Options: 2-way match, 3-way match, Automated coding, Exception handling
+    - Helper: "Invoice processing requirements affect P2P system configuration."
 
-3. Do you have role-based access control requirements?
-   - Type: Yes/No with complexity (Simple roles → Complex matrix)
-   - Helper: "Access control complexity affects implementation and ongoing maintenance."
+41. Supplier governance requirements (preferred suppliers, contracts, restrictions).
+    - Type: Free text
+    - Helper: "Supplier governance affects procurement workflow configuration."
 
-4. Are you considering anti-money laundering (AML) or transaction monitoring tools?
-   - Type: Yes/No with status (Considering, Planning, Required)
-   - Helper: "AML tools may require specific integrations or data exports."
-
-5. Do you need segregation of duties controls?
-   - Type: Yes/No with examples
-   - Helper: "Segregation of duties is important for financial controls and affects user role design."
-
-6. How often do you undergo external audits?
-   - Type: Multiple choice (Annual, Quarterly, Ad-hoc, Not applicable)
-   - Helper: "Audit frequency affects reporting and data retention requirements."
+42. Capex tracking:
+    - Type: Multiple select
+    - Options: Budget approval, Project tracking, PO-to-asset creation
+    - Helper: "Capex tracking requirements affect project and asset management configuration."
 
 ---
 
-## Section 9: Growth, Scalability & Strategy
-**Estimated time: 5-6 minutes**
+## Section 9: Fixed Assets, Leases & Property
+**Estimated time: 5 minutes**
 
-**Purpose:** Understand future growth plans and scalability needs. This helps assess long-term platform fit.
+**Purpose:** Understanding fixed asset management, lease accounting, and property portfolio requirements.
 
 ### Questions:
-1. Do you plan to add new entities, locations, or business units in the next 3-5 years?
-   - Type: Yes/No with details (free text)
-   - Helper: "Growth plans affect scalability requirements and may favour more flexible platforms."
+43. Approximate number of fixed assets and leases.
+    - Type: Free text
+    - Helper: "Asset volume affects system performance and module requirements."
 
-2. Do you anticipate significant transaction volume growth?
-   - Type: Yes/No with scale (Moderate growth → Rapid expansion)
-   - Helper: "Volume growth affects system performance requirements and cloud scalability."
+44. Multiple depreciation books required?
+    - Type: Yes/No with follow-up
+    - Helper: "Multiple depreciation books affect asset management configuration."
 
-3. What is your implementation timeline preference?
-   - Type: Multiple choice (6 months, 12 months, 18-24 months, Flexible)
-   - Helper: "Timeline affects phasing and may influence platform selection based on implementation complexity."
+45. Asset transfers between entities required?
+    - Type: Yes/No with follow-up
+    - Helper: "Inter-entity asset transfers affect multi-entity configuration."
 
-4. Are you open to adopting ERP best practices vs replicating current processes?
-   - Type: Scale 1-5 (Replicate current → Adopt best practices)
-   - Helper: "Process flexibility affects customisation needs and implementation cost."
-
-5. Do you need the system to support future acquisitions or mergers?
-   - Type: Yes/No
-   - Helper: "M&A activity requires flexible multi-entity architecture."
-
-6. What is your priority for the ERP implementation?
-   - Type: Multiple select ranked (Cost efficiency, Speed to value, Functionality fit, Scalability, Integration capability, Partner support)
-   - Helper: "Priorities help weight decision criteria and may influence platform selection."
+46. Property portfolio reporting required with separate P&Ls?
+    - Type: Yes/No with follow-up
+    - Helper: "Property portfolio reporting affects reporting and entity structure."
 
 ---
 
-## Section 10: Decision Criteria & Priorities
-**Estimated time: 4-5 minutes**
+## Section 10: Controls, Audit & Compliance
+**Estimated time: 5 minutes**
 
-**Purpose:** Capture explicit decision criteria weightings to support a balanced, defensible comparison.
+**Purpose:** Understanding compliance requirements, audit needs, and governance structure.
 
 ### Questions:
-1. When do you need to make a final ERP decision?
-   - Type: Date picker
-   - Helper: "Decision timeline affects discovery depth and implementation planning."
+47. Audit log requirements for:
+    - Type: Multiple select
+    - Options: GL postings, Approvals, Master data changes
+    - Helper: "Audit logging requirements affect system configuration and data retention."
 
-2. What is your target go-live date for Phase 1?
-   - Type: Date picker (optional)
-   - Helper: "Go-live target helps plan implementation phasing."
+48. Data retention requirements (years) for: Financial transactions / POS detail / Gaming extracts
+    - Type: Free text
+    - Helper: "Data retention affects storage requirements and compliance configuration."
 
-3. Please rank the importance of each decision criterion (total must equal 100%):
-   - Type: Sliders or percentage inputs for each:
-     - Price/Total Cost of Ownership (%)
-     - Functionality fit (%)
-     - Upgradeability/Scalability (%)
-     - Integration friendliness (%)
-     - Partner capability (%)
-     - Implementation timeline (%)
-   - Helper: "These weightings help create a balanced, objective comparison between platforms."
+49. Identity and access expectations:
+    - Type: Multiple select
+    - Options: Domain-restricted access, External guest access
+    - Helper: "Access expectations affect authentication and licensing requirements."
 
-4. Are there any deal-breakers or must-have requirements?
-   - Type: Free text
-   - Helper: "Deal-breakers help filter platform options early in the evaluation."
+---
 
-5. Who are the key decision-makers for this ERP selection?
-   - Type: Free text with roles
-   - Helper: "Understanding decision-makers helps plan stakeholder engagement."
+## Section 11: Fit, Risk & Decision Criteria
+**Estimated time: 8 minutes**
+
+**Purpose:** Capturing explicit decision criteria weightings to support a balanced, defensible comparison.
+
+### Questions:
+50. Process approach preference:
+    - Type: Multiple choice
+    - Options: Adopt standard best practice where possible, Replicate current processes
+    - Helper: "Process flexibility affects customisation needs and implementation cost."
+
+51. Customisation tolerance: List up to 5 non-negotiable workflows
+    - Type: Free text
+    - Helper: "Non-negotiable workflows affect ERP selection and implementation approach."
+
+52. Upgrade and change appetite: Importance of staying close to vendor standard
+    - Type: Multiple choice
+    - Options: Very important, Important, Moderately important, Not important
+    - Helper: "Upgrade appetite affects customisation decisions and long-term maintenance."
+
+53. Implementation constraints: Target go-live dates / Blackout periods
+    - Type: Free text
+    - Helper: "Implementation constraints affect project planning and phasing."
+
+54. Decision weightings (total must equal 100%):
+    - Type: Percentage sliders
+    - Criteria: Functional fit, Integration fit, Multi-entity & consolidation, Controls & audit, Implementation speed, 5-year TCO, Partner delivery confidence
+    - Helper: "These weightings help create a balanced, objective comparison between platforms."
+
+55. Deal-breakers: List up to 5 conditions that would stop the project
+    - Type: Free text
+    - Helper: "Deal-breakers help filter platform options early in the evaluation."
 
 ---
 

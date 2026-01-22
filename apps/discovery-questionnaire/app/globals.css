@@ -3,19 +3,62 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 31, 41, 55;
+  --background-rgb: 250, 250, 250;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer base {
+  body {
+    color: rgb(var(--foreground-rgb));
+    background-color: rgb(var(--background-rgb));
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+  }
+
+  a {
+    @apply text-brand-purple transition-colors;
+  }
+
+  a:hover {
+    @apply text-brand-purpleDark underline;
+  }
+
+  a:focus-visible {
+    @apply outline-none ring-2 ring-accent-coral ring-offset-2 rounded;
+  }
+
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none ring-2 ring-accent-coral ring-offset-2;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  input[type="email"],
+  textarea,
+  select {
+    @apply rounded-xl border-neutral-border bg-white px-4 py-2.5 text-neutral-text transition-all;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="date"]:focus,
+  input[type="email"]:focus,
+  textarea:focus,
+  select:focus {
+    @apply border-accent-coral ring-2 ring-accent-coral ring-opacity-20;
+  }
+
+  input[type="text"]:disabled,
+  input[type="number"]:disabled,
+  input[type="date"]:disabled,
+  textarea:disabled,
+  select:disabled {
+    @apply bg-neutral-bg text-neutral-muted cursor-not-allowed;
+  }
 }
 
 @layer utilities {

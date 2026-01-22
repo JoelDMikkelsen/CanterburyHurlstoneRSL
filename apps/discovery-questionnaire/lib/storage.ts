@@ -125,7 +125,7 @@ export async function createInitialResponse(
   const sections: { [key: string]: SectionState } = {};
   
   // Initialize all sections
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 11; i++) {
     sections[`section${i}`] = {
       id: `section${i}`,
       name: "",
@@ -145,7 +145,7 @@ export async function createInitialResponse(
     startedAt: now,
     completedAt: null,
     progress: {
-      totalSections: 10,
+      totalSections: 11,
       completedSections: 0,
       percentComplete: 0,
       currentSection: 1,

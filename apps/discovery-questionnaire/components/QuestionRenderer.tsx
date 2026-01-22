@@ -2,6 +2,7 @@
 
 import { Question } from "@/types";
 import { useState } from "react";
+import { PriorityRanking } from "./PriorityRanking";
 
 interface QuestionRendererProps {
   question: Question;
@@ -31,7 +32,7 @@ export function QuestionRenderer({
             {question.options?.map((option) => (
               <label
                 key={option.value}
-                className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                className="flex items-center p-4 border-2 border-neutral-border rounded-xl cursor-pointer hover:border-accent-coral hover:bg-accent-coral/5 transition-all duration-200"
               >
                 <input
                   type="radio"
@@ -44,9 +45,9 @@ export function QuestionRenderer({
                       setShowFollowup(e.target.value !== "");
                     }
                   }}
-                  className="mr-3"
+                  className="mr-3 w-4 h-4 text-accent-coral focus:ring-2 focus:ring-accent-coral focus:ring-offset-2"
                 />
-                <span>{option.label}</span>
+                <span className="text-neutral-text">{option.label}</span>
               </label>
             ))}
           </div>
@@ -61,7 +62,13 @@ export function QuestionRenderer({
               return (
                 <label
                   key={option.value}
-                  className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                  className={`
+                    flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200
+                    ${isChecked 
+                      ? 'border-accent-coral bg-accent-coral/10' 
+                      : 'border-neutral-border hover:border-accent-coral hover:bg-accent-coral/5'
+                    }
+                  `}
                 >
                   <input
                     type="checkbox"
@@ -74,9 +81,9 @@ export function QuestionRenderer({
                         onChange(current.filter((v) => v !== option.value));
                       }
                     }}
-                    className="mr-3"
+                    className="mr-3 w-4 h-4 text-accent-coral focus:ring-2 focus:ring-accent-coral focus:ring-offset-2 rounded"
                   />
-                  <span>{option.label}</span>
+                  <span className="text-neutral-text">{option.label}</span>
                 </label>
               );
             })}
@@ -91,7 +98,7 @@ export function QuestionRenderer({
         return (
           <div className="space-y-4">
             <div className="flex gap-4">
-              <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex items-center p-4 border-2 border-neutral-border rounded-xl cursor-pointer hover:border-accent-coral hover:bg-accent-coral/5 transition-all duration-200 flex-1">
                 <input
                   type="radio"
                   name={question.id}
@@ -100,11 +107,11 @@ export function QuestionRenderer({
                     onChange({ value: true, followup: followupValue });
                     setShowFollowup(true);
                   }}
-                  className="mr-3"
+                  className="mr-3 w-4 h-4 text-accent-coral focus:ring-2 focus:ring-accent-coral focus:ring-offset-2"
                 />
-                <span>Yes</span>
+                <span className="text-neutral-text font-medium">Yes</span>
               </label>
-              <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex items-center p-4 border-2 border-neutral-border rounded-xl cursor-pointer hover:border-accent-coral hover:bg-accent-coral/5 transition-all duration-200 flex-1">
                 <input
                   type="radio"
                   name={question.id}
@@ -113,13 +120,13 @@ export function QuestionRenderer({
                     onChange(false);
                     setShowFollowup(false);
                   }}
-                  className="mr-3"
+                  className="mr-3 w-4 h-4 text-accent-coral focus:ring-2 focus:ring-accent-coral focus:ring-offset-2"
                 />
-                <span>No</span>
+                <span className="text-neutral-text font-medium">No</span>
               </label>
             </div>
             {question.followupQuestion && shouldShowFollowup && (
-              <div className="ml-4 pl-4 border-l-2 border-primary-300">
+              <div className="ml-4 pl-4 border-l-4 border-accent-coral bg-accent-coral/5 rounded-r-xl py-4 pr-4">
                 <QuestionRenderer
                   question={question.followupQuestion}
                   value={followupValue || ""}
@@ -134,16 +141,19 @@ export function QuestionRenderer({
 
       case "scale":
         return (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <input
               type="range"
               min={question.min || 1}
               max={question.max || 5}
               value={value || question.min || 1}
               onChange={(e) => onChange(parseInt(e.target.value))}
-              className="w-full"
+              className="w-full h-2 bg-neutral-border rounded-lg appearance-none cursor-pointer accent-accent-coral"
+              style={{
+                background: `linear-gradient(to right, #FF6B4A 0%, #FF6B4A ${((value || question.min || 1) - (question.min || 1)) / ((question.max || 5) - (question.min || 1)) * 100}%, #E5E7EB ${((value || question.min || 1) - (question.min || 1)) / ((question.max || 5) - (question.min || 1)) * 100}%, #E5E7EB 100%)`
+              }}
             />
-            <div className="flex justify-between text-sm text-gray-600">
+            <div className="flex justify-between text-sm text-neutral-muted">
               {question.scaleLabels?.map((label, idx) => (
                 <span key={idx} className="text-center flex-1">
                   {label}
@@ -151,7 +161,7 @@ export function QuestionRenderer({
               ))}
             </div>
             <div className="text-center mt-2">
-              <span className="text-lg font-semibold text-primary-600">
+              <span className="text-2xl font-bold text-brand-purple">
                 {value || question.min || 1}
               </span>
             </div>
@@ -166,7 +176,7 @@ export function QuestionRenderer({
             max={question.max}
             value={value || ""}
             onChange={(e) => onChange(e.target.value ? parseInt(e.target.value) : null)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-4 py-2.5 border-2 border-neutral-border rounded-xl bg-white text-neutral-text focus:ring-2 focus:ring-accent-coral focus:border-accent-coral transition-all"
           />
         );
 
@@ -177,7 +187,7 @@ export function QuestionRenderer({
             onChange={(e) => onChange(e.target.value)}
             maxLength={question.maxLength}
             rows={4}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-4 py-2.5 border-2 border-neutral-border rounded-xl bg-white text-neutral-text focus:ring-2 focus:ring-accent-coral focus:border-accent-coral transition-all resize-y"
           />
         );
 
@@ -187,18 +197,27 @@ export function QuestionRenderer({
             type="date"
             value={value || ""}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-4 py-2.5 border-2 border-neutral-border rounded-xl bg-white text-neutral-text focus:ring-2 focus:ring-accent-coral focus:border-accent-coral transition-all"
+          />
+        );
+
+      case "priority-ranking":
+        return (
+          <PriorityRanking
+            value={Array.isArray(value) ? value : null}
+            onChange={onChange}
           />
         );
 
       case "percentage-sliders":
         const criteria = value || {
-          price: 0,
-          functionality: 0,
-          scalability: 0,
-          integration: 0,
-          partner: 0,
-          timeline: 0,
+          functionalFit: 0,
+          integrationFit: 0,
+          multiEntity: 0,
+          controlsAudit: 0,
+          implementationSpeed: 0,
+          tco5Year: 0,
+          partnerDelivery: 0,
         };
         const total = Object.values(criteria).reduce((a: number, b: number) => a + b, 0);
         const isValid = total === 100;
@@ -206,15 +225,16 @@ export function QuestionRenderer({
         return (
           <div className="space-y-4">
             {[
-              { key: "price", label: "Price/Total Cost of Ownership" },
-              { key: "functionality", label: "Functionality Fit" },
-              { key: "scalability", label: "Upgradeability/Scalability" },
-              { key: "integration", label: "Integration Friendliness" },
-              { key: "partner", label: "Partner Capability" },
-              { key: "timeline", label: "Implementation Timeline" },
+              { key: "functionalFit", label: "Functional fit" },
+              { key: "integrationFit", label: "Integration fit" },
+              { key: "multiEntity", label: "Multi-entity & consolidation" },
+              { key: "controlsAudit", label: "Controls & audit" },
+              { key: "implementationSpeed", label: "Implementation speed" },
+              { key: "tco5Year", label: "5-year TCO" },
+              { key: "partnerDelivery", label: "Partner delivery confidence" },
             ].map(({ key, label }) => (
               <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-neutral-text mb-2">
                   {label}
                 </label>
                 <input
@@ -229,21 +249,24 @@ export function QuestionRenderer({
                     };
                     onChange(newCriteria);
                   }}
-                  className="w-full"
+                  className="w-full h-2 bg-neutral-border rounded-lg appearance-none cursor-pointer accent-accent-coral"
+                  style={{
+                    background: `linear-gradient(to right, #FF6B4A 0%, #FF6B4A ${criteria[key] || 0}%, #E5E7EB ${criteria[key] || 0}%, #E5E7EB 100%)`
+                  }}
                 />
-                <div className="flex justify-between mt-1">
-                  <span className="text-sm text-gray-600">0%</span>
-                  <span className="text-sm font-semibold text-primary-600">
+                <div className="flex justify-between mt-2">
+                  <span className="text-sm text-neutral-muted">0%</span>
+                  <span className="text-base font-bold text-brand-purple">
                     {criteria[key] || 0}%
                   </span>
-                  <span className="text-sm text-gray-600">100%</span>
+                  <span className="text-sm text-neutral-muted">100%</span>
                 </div>
               </div>
             ))}
-            <div className={`mt-4 p-3 rounded-lg ${isValid ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
-              <strong>Total: {total}%</strong>
+            <div className={`mt-6 p-4 rounded-xl border-2 ${isValid ? "bg-green-50 text-green-800 border-green-200" : "bg-red-50 text-red-800 border-red-200"}`}>
+              <strong className="text-base">Total: {total}%</strong>
               {!isValid && (
-                <p className="text-sm mt-1">
+                <p className="text-sm mt-2">
                   Total must equal 100%. Please adjust the sliders.
                 </p>
               )}
@@ -257,16 +280,16 @@ export function QuestionRenderer({
   };
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
+    <div className="space-y-3">
+      <label className="block text-base font-semibold text-neutral-text leading-tight">
         {question.label}
-        {question.required && <span className="text-red-500 ml-1">*</span>}
+        {question.required && <span className="text-accent-coral ml-1.5">*</span>}
       </label>
       {question.helperText && (
-        <p className="text-sm text-gray-500 italic">{question.helperText}</p>
+        <p className="text-sm text-neutral-muted leading-relaxed">{question.helperText}</p>
       )}
       {renderQuestion()}
-      {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
+      {error && <p className="text-sm text-red-600 mt-2 font-medium">{error}</p>}
     </div>
   );
 }

@@ -76,34 +76,38 @@ export default function Home() {
 
   if (isChecking) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-bg">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-[3px] border-brand-purple border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-neutral-muted font-medium">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+    <div className="min-h-screen bg-neutral-bg flex items-center justify-center px-4 py-12">
+      <div className="max-w-2xl w-full">
+        <div className="bg-white rounded-2xl shadow-elevated overflow-hidden">
+          <div className="bg-gradient-to-r from-brand-purple to-brand-purpleDark p-8 sm:p-10">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">
               ERP Discovery Questionnaire
             </h1>
-            <p className="text-lg text-gray-600 mb-8">
+            <div className="h-1 w-20 bg-accent-coral rounded-full"></div>
+          </div>
+          
+          <div className="p-8 sm:p-10">
+            <p className="text-lg text-neutral-text mb-8 leading-relaxed">
               This questionnaire is designed to gather context for evaluating ERP solutions.
               Your responses will help inform a balanced comparison between NetSuite and
               Microsoft Dynamics 365 Business Central.
             </p>
 
-            <div className="bg-blue-50 border-l-4 border-primary-500 p-4 mb-8">
-              <p className="text-sm text-gray-700">
-                <strong>Estimated completion time:</strong> 45-60 minutes
+            <div className="bg-brand-purple/5 border-l-4 border-accent-coral rounded-r-xl p-5 mb-8">
+              <p className="text-sm text-neutral-text font-medium">
+                <strong className="text-brand-purple">Estimated completion time:</strong> 60-75 minutes
               </p>
-              <p className="text-sm text-gray-700 mt-2">
+              <p className="text-sm text-neutral-text mt-2">
                 You can save your progress and return later. All responses are automatically saved.
               </p>
             </div>
@@ -111,14 +115,14 @@ export default function Home() {
             {!isAuthenticated ? (
               <button
                 onClick={handleLogin}
-                className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+                className="w-full bg-accent-coral text-white py-4 px-8 rounded-xl font-semibold text-lg hover:bg-accent-coralDark transition-all duration-200 shadow-card hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-accent-coral focus-visible:ring-offset-2"
               >
                 Sign in with Microsoft
               </button>
             ) : (
               <Link
                 href="/questionnaire"
-                className="block w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-colors text-center"
+                className="block w-full bg-accent-coral text-white py-4 px-8 rounded-xl font-semibold text-lg hover:bg-accent-coralDark transition-all duration-200 shadow-card hover:shadow-card-hover text-center focus-visible:ring-2 focus-visible:ring-accent-coral focus-visible:ring-offset-2"
               >
                 Continue to Questionnaire
               </Link>

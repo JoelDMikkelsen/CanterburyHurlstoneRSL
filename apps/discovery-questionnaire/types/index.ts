@@ -6,7 +6,8 @@ export type QuestionType =
   | "number"
   | "text"
   | "date"
-  | "percentage-sliders";
+  | "percentage-sliders"
+  | "priority-ranking";
 
 export interface QuestionOption {
   label: string;

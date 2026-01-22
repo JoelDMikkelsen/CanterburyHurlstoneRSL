@@ -196,10 +196,10 @@ export default function QuestionnairePage() {
 
   if (!isAuthenticated || !response) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-neutral-bg">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-[3px] border-brand-purple border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-neutral-muted font-medium">Loading...</p>
         </div>
       </div>
     );
@@ -210,17 +210,20 @@ export default function QuestionnairePage() {
   const currentIndex = sections.findIndex((s) => s.id === currentSectionId);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-xl font-semibold text-gray-900">
-              ERP Discovery Questionnaire
-            </h1>
+    <div className="min-h-screen bg-neutral-bg">
+      <div className="bg-white border-b border-neutral-border sticky top-0 z-10 shadow-sm">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            <div>
+              <h1 className="text-xl font-bold text-brand-purple">
+                ERP Discovery Questionnaire
+              </h1>
+              <div className="h-1 w-16 bg-accent-coral rounded-full mt-1"></div>
+            </div>
             <SaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
           </div>
           <div className="mt-4">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <div className="flex justify-between text-sm text-neutral-muted mb-3 font-medium">
               <span>{response.progress.percentComplete}% Complete</span>
               <span>
                 Section {currentIndex + 1} of {sections.length}
@@ -231,11 +234,11 @@ export default function QuestionnairePage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
           <aside className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-4 sticky top-24">
-              <h2 className="font-semibold text-gray-900 mb-4">Sections</h2>
+            <div className="bg-brand-purple rounded-2xl shadow-elevated p-5 sticky top-24">
+              <h2 className="font-bold text-white mb-5 text-lg">Sections</h2>
               <SectionNavigation
                 currentSectionId={currentSectionId}
                 sectionStates={response.sections}
@@ -245,22 +248,22 @@ export default function QuestionnairePage() {
           </aside>
 
           <main className="lg:col-span-3">
-            <div className="bg-white rounded-lg shadow p-8">
+            <div className="bg-white rounded-2xl shadow-card p-6 sm:p-8 lg:p-10">
               {currentSection && (
                 <>
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  <div className="mb-8 pb-6 border-b border-neutral-border">
+                    <h2 className="text-3xl font-bold text-brand-purple mb-3">
                       {currentSection.name}
                     </h2>
                     {currentSection.description && (
-                      <p className="text-gray-600 mb-2">{currentSection.description}</p>
+                      <p className="text-neutral-text text-base leading-relaxed mb-3">{currentSection.description}</p>
                     )}
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-neutral-muted font-medium">
                       Estimated time: {currentSection.estimatedMinutes} minutes
                     </p>
                   </div>
 
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     {currentSection.questions.map((question) => (
                       <QuestionRenderer
                         key={question.id}
@@ -272,24 +275,24 @@ export default function QuestionnairePage() {
                     ))}
                   </div>
 
-                  <div className="mt-8 flex justify-between items-center">
+                  <div className="mt-10 pt-6 border-t border-neutral-border flex flex-col sm:flex-row justify-between items-center gap-4">
                     <button
                       onClick={handlePrevious}
                       disabled={currentIndex === 0}
-                      className="px-6 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-6 py-3 border-2 border-brand-purple text-brand-purple rounded-xl font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-brand-purple hover:text-white transition-all duration-200 focus-visible:ring-2 focus-visible:ring-accent-coral focus-visible:ring-offset-2"
                     >
                       Previous
                     </button>
 
-                    <div className="flex gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
+                    <div className="flex gap-4 items-center">
+                      <label className="flex items-center gap-2 cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={currentSectionState?.completed || false}
                           onChange={handleSectionComplete}
-                          className="w-4 h-4"
+                          className="w-5 h-5 text-accent-coral rounded border-neutral-border focus:ring-2 focus:ring-accent-coral focus:ring-offset-2 cursor-pointer"
                         />
-                        <span className="text-sm text-gray-700">
+                        <span className="text-sm text-neutral-text font-medium group-hover:text-brand-purple transition-colors">
                           Mark section as complete
                         </span>
                       </label>
@@ -298,7 +301,7 @@ export default function QuestionnairePage() {
                     {currentIndex < sections.length - 1 ? (
                       <button
                         onClick={handleNext}
-                        className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                        className="px-8 py-3 bg-accent-coral text-white rounded-xl font-semibold hover:bg-accent-coralDark transition-all duration-200 shadow-card hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-accent-coral focus-visible:ring-offset-2"
                       >
                         Next
                       </button>
@@ -310,7 +313,7 @@ export default function QuestionnairePage() {
                             alert("Thank you for completing the questionnaire!");
                           }
                         }}
-                        className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        className="px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-card hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                       >
                         Complete Questionnaire
                       </button>

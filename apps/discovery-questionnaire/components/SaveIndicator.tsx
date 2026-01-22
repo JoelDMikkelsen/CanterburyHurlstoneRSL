@@ -8,8 +8,8 @@ interface SaveIndicatorProps {
 export function SaveIndicator({ isSaving, lastSaved }: SaveIndicatorProps) {
   if (isSaving) {
     return (
-      <div className="flex items-center gap-2 text-sm text-gray-600">
-        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div>
+      <div className="flex items-center gap-2 text-sm text-neutral-muted bg-neutral-bg px-3 py-1.5 rounded-full">
+        <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-neutral-muted border-t-transparent"></div>
         <span>Saving...</span>
       </div>
     );
@@ -17,8 +17,8 @@ export function SaveIndicator({ isSaving, lastSaved }: SaveIndicatorProps) {
 
   if (lastSaved) {
     return (
-      <div className="flex items-center gap-2 text-sm text-green-600">
-        <span>✓</span>
+      <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
+        <span className="text-green-600 font-semibold">✓</span>
         <span>Saved</span>
       </div>
     );
