@@ -92,6 +92,42 @@ This questionnaire is designed to gather high-quality context before an on-site 
 
 ## Azure Deployment
 
+### GitHub Actions CI/CD Setup
+
+The repository includes a GitHub Actions workflow (`.github/workflows/main_rg-discovery-questionnaire-dev.yml`) that automatically builds and deploys to Azure App Service on push to `main`.
+
+#### Required GitHub Secrets
+
+The workflow uses Azure OIDC authentication and requires the following secrets in GitHub:
+
+1. **Go to:** Repository → Settings → Secrets and variables → Actions
+2. **Add these secrets:**
+
+   | Secret Name | Description | Where to Get Value |
+   |------------|-------------|-------------------|
+   | `AZURE_CLIENT_ID` | Azure service principal/client ID | Copy from existing `AZUREAPPSERVICE_CLIENTID_<GUID>` secret (if Azure Deployment Center created it) |
+   | `AZURE_TENANT_ID` | Azure AD tenant ID | Copy from existing `AZUREAPPSERVICE_TENANTID_<GUID>` secret |
+   | `AZURE_SUBSCRIPTION_ID` | Azure subscription ID | Copy from existing `AZUREAPPSERVICE_SUBSCRIPTIONID_<GUID>` secret |
+
+3. **If Azure Deployment Center created secrets with `AZUREAPPSERVICE_*` names:**
+   - Do NOT delete the existing `AZUREAPPSERVICE_*` secrets
+   - Create new secrets with the standard names above
+   - Copy the **values** from the `AZUREAPPSERVICE_*` secrets
+   - The Client ID GUID can be extracted from the secret name if needed
+
+4. **Additional secrets required for the build:**
+   - `AZURE_REDIRECT_URI` - Production redirect URI (e.g., `https://your-app.azurewebsites.net`)
+   - `CLIENT_EMAIL_DOMAIN` - Allowed email domain for access
+   - `AZURE_STORAGE_ACCOUNT_NAME` - Azure Storage account name
+   - `AZURE_STORAGE_ACCOUNT_KEY` - Azure Storage account key
+
+#### Workflow Behavior
+
+- **Triggers:** Automatically runs on push to `main` when files in `apps/discovery-questionnaire/` change
+- **Build:** Runs `npm ci` and `npm run build` in the app directory
+- **Deploy:** Uses Azure OIDC login and deploys to `rg-discovery-questionnaire-dev` App Service
+- **Manual trigger:** Can be manually triggered via GitHub Actions UI (workflow_dispatch)
+
 ### Option 1: Azure App Service
 
 1. **Build the Application**

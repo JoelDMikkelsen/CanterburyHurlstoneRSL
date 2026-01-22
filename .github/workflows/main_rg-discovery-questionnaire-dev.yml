@@ -1,5 +1,10 @@
 name: Build and deploy Node.js app to Azure Web App - rg-discovery-questionnaire-dev
 
+# Required permissions for Azure OIDC authentication
+permissions:
+  id-token: write  # Required for Azure login with OIDC
+  contents: read  # Required for actions/checkout
+
 on:
   push:
     branches:
@@ -11,6 +16,41 @@ on:
 env:
   AZURE_WEBAPP_NAME: rg-discovery-questionnaire-dev
   NODE_VERSION: '20.x'
+
+# ============================================================================
+# GITHUB SECRETS CONFIGURATION
+# ============================================================================
+# This workflow uses Azure OIDC authentication and expects the following
+# GitHub secrets to be configured:
+#
+# Required secrets:
+#   - AZURE_CLIENT_ID: Azure service principal/client ID for deployment
+#   - AZURE_TENANT_ID: Azure AD tenant ID
+#   - AZURE_SUBSCRIPTION_ID: Azure subscription ID
+#
+# If Azure Deployment Center created secrets with names like:
+#   - AZUREAPPSERVICE_CLIENTID_<GUID>
+#   - AZUREAPPSERVICE_TENANTID_<GUID>
+#   - AZUREAPPSERVICE_SUBSCRIPTIONID_<GUID>
+#
+# You need to create alias secrets in GitHub:
+#   1. Go to: Repository Settings → Secrets and variables → Actions
+#   2. For each secret below, click "New repository secret"
+#   3. Copy the VALUE from the existing AZUREAPPSERVICE_* secret
+#   4. Create a new secret with the standard name:
+#
+#      Secret Name: AZURE_CLIENT_ID
+#      Secret Value: (copy from AZUREAPPSERVICE_CLIENTID_<GUID>)
+#
+#      Secret Name: AZURE_TENANT_ID
+#      Secret Value: (copy from AZUREAPPSERVICE_TENANTID_<GUID>)
+#
+#      Secret Name: AZURE_SUBSCRIPTION_ID
+#      Secret Value: (copy from AZUREAPPSERVICE_SUBSCRIPTIONID_<GUID>)
+#
+# IMPORTANT: Do NOT delete the existing AZUREAPPSERVICE_* secrets.
+#            They may be used by other workflows or Azure Deployment Center.
+# ============================================================================
 
 jobs:
   build:
@@ -83,6 +123,8 @@ jobs:
           name: node-app
           path: .
 
+      # Azure OIDC login - uses secrets: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID
+      # See workflow comments at top of file for secret configuration instructions
       - name: Login to Azure
         uses: azure/login@v2
         with:
