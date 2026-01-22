@@ -219,7 +219,7 @@ export function QuestionRenderer({
           tco5Year: 0,
           partnerDelivery: 0,
         };
-        const total = Object.values(criteria).reduce((a: number, b: number) => a + b, 0);
+        const total = (Object.values(criteria) as number[]).reduce((a, b) => a + b, 0);
         const isValid = total === 100;
 
         return (
