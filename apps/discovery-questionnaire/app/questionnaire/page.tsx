@@ -9,6 +9,7 @@ import { ProgressBar } from "@/components/ProgressBar";
 import { SectionNavigation } from "@/components/SectionNavigation";
 import { QuestionRenderer } from "@/components/QuestionRenderer";
 import { SaveIndicator } from "@/components/SaveIndicator";
+import { CompletionScreen } from "@/components/CompletionScreen";
 
 export default function QuestionnairePage() {
   const { instance, accounts } = useMsal();
@@ -19,6 +20,8 @@ export default function QuestionnairePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isCompleting, setIsCompleting] = useState(false);
+  const [showCompletion, setShowCompletion] = useState(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -32,7 +35,7 @@ export default function QuestionnairePage() {
     }
   }, [isAuthenticated, accounts, router]);
 
-  const loadResponse = async () => {
+  const loadResponse = async (): Promise<QuestionnaireResponse | null> => {
     try {
       const account = accounts[0];
       const userId = account.homeAccountId;
@@ -53,9 +56,12 @@ export default function QuestionnairePage() {
         if (data.progress.currentSection) {
           setCurrentSectionId(`section${data.progress.currentSection}`);
         }
+        return data;
       }
+      return null;
     } catch (error) {
       console.error("Error loading response:", error);
+      return null;
     }
   };
 
@@ -197,6 +203,65 @@ export default function QuestionnairePage() {
     await saveResponse(currentSectionId, section.answers, true);
   };
 
+  const handleCompleteQuestionnaire = async () => {
+    if (!response || !accounts[0]) return;
+
+    // First, mark the last section as complete
+    await handleSectionComplete();
+
+    // Wait a moment for the save to complete, then reload
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+    // Check if all sections are now complete
+    const updatedResponse = await loadResponse();
+    if (!updatedResponse) {
+      alert("Unable to verify completion. Please try again.");
+      return;
+    }
+
+    if (updatedResponse.progress.completedSections !== updatedResponse.progress.totalSections) {
+      // Not all sections complete yet - show which ones are missing
+      const incompleteSections = sections.filter(
+        (s) => !updatedResponse.sections[s.id]?.completed
+      );
+      alert(
+        `Please complete all sections before finishing. Missing: ${incompleteSections.map((s) => s.name).join(", ")}`
+      );
+      return;
+    }
+
+    setIsCompleting(true);
+
+    try {
+      const account = accounts[0];
+      const userId = account.homeAccountId;
+      const userEmail = account.username;
+      const userName = account.name || "";
+
+      const res = await fetch("/api/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": userId,
+          "x-user-email": userEmail,
+          "x-user-name": userName,
+        },
+      });
+
+      if (res.ok) {
+        setShowCompletion(true);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to complete questionnaire");
+      }
+    } catch (error: any) {
+      console.error("Error completing questionnaire:", error);
+      alert(`There was an error completing the questionnaire: ${error.message || "Please try again."}`);
+    } finally {
+      setIsCompleting(false);
+    }
+  };
+
   const handleSectionClick = (sectionId: string) => {
     setCurrentSectionId(sectionId);
     setErrors({});
@@ -217,6 +282,10 @@ export default function QuestionnairePage() {
       setErrors({});
     }
   };
+
+  if (showCompletion && response) {
+    return <CompletionScreen userName={response.metadata.userName} />;
+  }
 
   if (!isAuthenticated || !response) {
     return (
@@ -334,15 +403,11 @@ export default function QuestionnairePage() {
                       </button>
                     ) : (
                       <button
-                        onClick={async () => {
-                          await handleSectionComplete();
-                          if (response.progress.completedSections === response.progress.totalSections - 1) {
-                            alert("Thank you for completing the questionnaire!");
-                          }
-                        }}
-                        className="px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-card hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                        onClick={handleCompleteQuestionnaire}
+                        disabled={isCompleting}
+                        className="px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-all duration-200 shadow-card hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Complete Questionnaire
+                        {isCompleting ? "Completing..." : "Complete Questionnaire"}
                       </button>
                     )}
                   </div>

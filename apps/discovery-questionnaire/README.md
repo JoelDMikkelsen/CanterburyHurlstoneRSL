@@ -61,6 +61,13 @@ This questionnaire is designed to gather high-quality context before an on-site 
    # Azure Storage (for Table Storage)
    AZURE_STORAGE_ACCOUNT_NAME=your-storage-account
    AZURE_STORAGE_ACCOUNT_KEY=your-storage-key
+
+   # Email Configuration (for completion notifications)
+   SMTP_HOST=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_USER=your-email@gmail.com
+   SMTP_PASSWORD=your-app-password
+   SMTP_FROM=your-email@gmail.com
    ```
 
 3. **Azure AD App Registration Setup**
@@ -123,6 +130,11 @@ The workflow uses Azure OIDC authentication and requires the following secrets i
    - `ALLOWED_EMAIL_DOMAINS` - Allowed email domains (comma-separated, e.g., `clientdomain.com,cmnl.com.au`) or `CLIENT_EMAIL_DOMAIN` for single domain
    - `AZURE_STORAGE_ACCOUNT_NAME` - Azure Storage account name
    - `AZURE_STORAGE_ACCOUNT_KEY` - Azure Storage account key
+   - `SMTP_HOST` - SMTP server hostname (e.g., `smtp.gmail.com`)
+   - `SMTP_PORT` - SMTP server port (e.g., `587` for TLS, `465` for SSL)
+   - `SMTP_USER` - SMTP username/email
+   - `SMTP_PASSWORD` - SMTP password or app password
+   - `SMTP_FROM` - From email address (defaults to SMTP_USER)
 
 #### Workflow Behavior
 
