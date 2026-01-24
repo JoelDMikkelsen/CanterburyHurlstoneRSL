@@ -53,7 +53,10 @@ This questionnaire is designed to gather high-quality context before an on-site 
    NEXT_PUBLIC_AZURE_REDIRECT_URI=http://localhost:3001
 
    # Client Email Domain Restriction
-   NEXT_PUBLIC_CLIENT_EMAIL_DOMAIN=clientdomain.com
+   # Option 1: Multiple domains (comma-separated, recommended)
+   NEXT_PUBLIC_ALLOWED_EMAIL_DOMAINS=clientdomain.com,cmnl.com.au
+   # Option 2: Single domain (fallback for backward compatibility)
+   # NEXT_PUBLIC_CLIENT_EMAIL_DOMAIN=clientdomain.com
 
    # Azure Storage (for Table Storage)
    AZURE_STORAGE_ACCOUNT_NAME=your-storage-account
@@ -117,7 +120,7 @@ The workflow uses Azure OIDC authentication and requires the following secrets i
 
 4. **Additional secrets required for the build:**
    - `AZURE_REDIRECT_URI` - Production redirect URI (e.g., `https://your-app.azurewebsites.net`)
-   - `CLIENT_EMAIL_DOMAIN` - Allowed email domain for access
+   - `ALLOWED_EMAIL_DOMAINS` - Allowed email domains (comma-separated, e.g., `clientdomain.com,cmnl.com.au`) or `CLIENT_EMAIL_DOMAIN` for single domain
    - `AZURE_STORAGE_ACCOUNT_NAME` - Azure Storage account name
    - `AZURE_STORAGE_ACCOUNT_KEY` - Azure Storage account key
 
@@ -169,8 +172,10 @@ The workflow uses Azure OIDC authentication and requires the following secrets i
    - Update `NEXT_PUBLIC_AZURE_REDIRECT_URI` in App Settings
 
 2. **Domain Restriction**
-   - Ensure `NEXT_PUBLIC_CLIENT_EMAIL_DOMAIN` is set correctly
-   - Only users with email addresses from this domain can access
+   - Set `NEXT_PUBLIC_ALLOWED_EMAIL_DOMAINS` (comma-separated, e.g., `clientdomain.com,cmnl.com.au`) for multiple domains
+   - Or set `NEXT_PUBLIC_CLIENT_EMAIL_DOMAIN` for a single domain (backward compatibility)
+   - Domain comparison is case-insensitive and handles whitespace automatically
+   - Only users with email addresses from allowed domains can access
 
 3. **Storage Account**
    - Ensure table `questionnaireresponses` exists
