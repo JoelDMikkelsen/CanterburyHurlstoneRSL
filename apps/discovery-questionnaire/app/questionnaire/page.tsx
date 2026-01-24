@@ -3,6 +3,7 @@
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { sections } from "@/lib/questions";
 import { QuestionnaireResponse, Section, SectionState } from "@/types";
 import { ProgressBar } from "@/components/ProgressBar";
@@ -10,6 +11,7 @@ import { SectionNavigation } from "@/components/SectionNavigation";
 import { QuestionRenderer } from "@/components/QuestionRenderer";
 import { SaveIndicator } from "@/components/SaveIndicator";
 import { CompletionScreen } from "@/components/CompletionScreen";
+import { createInitialResponse } from "@/lib/storage";
 
 export default function QuestionnairePage() {
   const { instance, accounts } = useMsal();
@@ -295,6 +297,33 @@ export default function QuestionnairePage() {
     setErrors({});
   };
 
+  const handleStartOver = async () => {
+    if (!response || !accounts[0]) return;
+    
+    if (!confirm("Are you sure you want to start over? This will delete all your current responses and cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const account = accounts[0];
+      const userId = account.homeAccountId;
+      const userEmail = account.username;
+      const userName = account.name || "";
+
+      // Create a fresh response
+      const freshResponse = await createInitialResponse(userId, userEmail, userName);
+      setResponse(freshResponse);
+      setCurrentSectionId("section1");
+      setErrors({});
+      
+      // Reload to get the fresh response
+      await loadResponse();
+    } catch (error) {
+      console.error("Error starting over:", error);
+      alert("Failed to start over. Please try again.");
+    }
+  };
+
   const handleNext = () => {
     const currentIndex = sections.findIndex((s) => s.id === currentSectionId);
     if (currentIndex < sections.length - 1) {
@@ -349,7 +378,29 @@ export default function QuestionnairePage() {
               </h1>
               <div className="h-1 w-16 bg-accent-coral rounded-full mt-1"></div>
             </div>
-            <SaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
+            <div className="flex items-center gap-3">
+              {(() => {
+                const account = accounts[0];
+                const identity = (account as any).email || account.username || "";
+                const domain = identity.toLowerCase().split("@")[1];
+                const isAdmin = domain === "fusion5.com.au" || domain === "fusion5.com";
+                return isAdmin ? (
+                  <Link
+                    href="/admin"
+                    className="px-3 py-1.5 border-2 border-brand-purple text-brand-purple rounded-lg font-semibold text-xs hover:bg-brand-purple hover:text-white transition-all"
+                  >
+                    Admin
+                  </Link>
+                ) : null;
+              })()}
+              <button
+                onClick={handleStartOver}
+                className="px-3 py-1.5 border-2 border-red-500 text-red-600 rounded-lg font-semibold text-xs hover:bg-red-500 hover:text-white transition-all"
+              >
+                Start Over
+              </button>
+              <SaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
+            </div>
           </div>
           <div className="mt-4">
             <div className="flex justify-between text-sm text-neutral-muted mb-3 font-medium">
@@ -423,7 +474,16 @@ export default function QuestionnairePage() {
                         <input
                           type="checkbox"
                           checked={currentSectionState?.completed || false}
-                          onChange={handleSectionComplete}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              handleSectionComplete();
+                            } else {
+                              // Uncheck - mark section as incomplete
+                              if (currentSectionState) {
+                                saveResponse(currentSectionId, currentSectionState.answers, false);
+                              }
+                            }
+                          }}
                           className="w-5 h-5 text-accent-coral rounded border-neutral-border focus:ring-2 focus:ring-accent-coral focus:ring-offset-2 cursor-pointer"
                         />
                         <span className="text-sm text-neutral-text font-medium group-hover:text-brand-purple transition-colors">

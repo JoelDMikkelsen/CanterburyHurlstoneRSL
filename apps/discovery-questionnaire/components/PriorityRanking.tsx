@@ -1,23 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 
 interface PriorityRankingProps {
   value: string[] | null;
@@ -33,61 +16,6 @@ const criteria = [
   { key: "tco5Year", label: "5-year TCO" },
   { key: "partnerDelivery", label: "Partner delivery confidence" },
 ];
-
-function SortableItem({
-  id,
-  label,
-  index,
-}: {
-  id: string;
-  label: string;
-  index: number;
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className="bg-white border-2 border-neutral-border rounded-xl p-4 flex items-center gap-3 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-grab active:cursor-grabbing"
-    >
-      <div
-        {...attributes}
-        {...listeners}
-        className="text-neutral-muted hover:text-brand-purple transition-colors touch-none cursor-grab active:cursor-grabbing"
-        aria-label="Drag handle"
-      >
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 9h16M8 15h16M4 9h.01M4 15h.01"
-          />
-        </svg>
-      </div>
-      <div className="flex-1 flex items-center gap-3">
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-brand-purple text-white flex items-center justify-center font-bold text-sm">
-          {index + 1}
-        </div>
-        <span className="text-neutral-text font-medium">{label}</span>
-      </div>
-    </div>
-  );
-}
 
 export function PriorityRanking({ value, onChange }: PriorityRankingProps) {
   // Initialize with default order if no value exists
@@ -167,55 +95,60 @@ export function PriorityRanking({ value, onChange }: PriorityRankingProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, isInitialized]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const moveUp = (index: number) => {
+    if (index === 0) return;
+    const newItems = [...items];
+    [newItems[index - 1], newItems[index]] = [newItems[index], newItems[index - 1]];
+    setItems(newItems);
+    onChange(newItems);
+  };
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id as string);
-        const newIndex = items.indexOf(over.id as string);
-        const newItems = arrayMove(items, oldIndex, newIndex);
-        onChange(newItems);
-        return newItems;
-      });
-    }
+  const moveDown = (index: number) => {
+    if (index === items.length - 1) return;
+    const newItems = [...items];
+    [newItems[index], newItems[index + 1]] = [newItems[index + 1], newItems[index]];
+    setItems(newItems);
+    onChange(newItems);
   };
 
   return (
     <div className="space-y-3">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          <div className="space-y-3">
-            {items.map((itemKey, index) => {
-              const criterion = criteria.find((c) => c.key === itemKey);
-              if (!criterion) return null;
-              return (
-                <SortableItem
-                  key={itemKey}
-                  id={itemKey}
-                  label={criterion.label}
-                  index={index}
-                />
-              );
-            })}
+      {items.map((itemKey, index) => {
+        const criterion = criteria.find((c) => c.key === itemKey);
+        if (!criterion) return null;
+        
+        return (
+          <div
+            key={itemKey}
+            className="bg-white border-2 border-neutral-border rounded-xl p-4 flex items-center gap-3 shadow-card hover:shadow-card-hover transition-all duration-200"
+          >
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-brand-purple text-white flex items-center justify-center font-bold text-sm">
+              {index + 1}
+            </div>
+            <span className="flex-1 text-neutral-text font-medium">{criterion.label}</span>
+            <div className="flex flex-col gap-1">
+              <button
+                type="button"
+                onClick={() => moveUp(index)}
+                disabled={index === 0}
+                className="px-3 py-1 text-xs font-semibold rounded-lg border-2 border-brand-purple text-brand-purple hover:bg-brand-purple hover:text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-brand-purple"
+                aria-label={`Move ${criterion.label} up`}
+              >
+                ↑ Move Up
+              </button>
+              <button
+                type="button"
+                onClick={() => moveDown(index)}
+                disabled={index === items.length - 1}
+                className="px-3 py-1 text-xs font-semibold rounded-lg border-2 border-brand-purple text-brand-purple hover:bg-brand-purple hover:text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-brand-purple"
+                aria-label={`Move ${criterion.label} down`}
+              >
+                ↓ Move Down
+              </button>
+            </div>
           </div>
-        </SortableContext>
-      </DndContext>
+        );
+      })}
     </div>
   );
 }

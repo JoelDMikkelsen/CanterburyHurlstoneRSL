@@ -699,7 +699,7 @@ export const sections: Section[] = [
         id: "q54",
         type: "priority-ranking",
         label: "Decision weightings (total must equal 100%):",
-        helperText: "Drag and drop to rank these criteria from most important (top) to least important (bottom).",
+        helperText: "Use the up and down buttons to rank these criteria from most important (top) to least important (bottom).",
         required: true,
       },
       {
