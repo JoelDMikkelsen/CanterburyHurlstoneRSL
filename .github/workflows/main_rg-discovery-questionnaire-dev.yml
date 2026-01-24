@@ -89,16 +89,12 @@ jobs:
       - name: Prepare deployment package
         working-directory: apps/discovery-questionnaire
         run: |
+          rm -rf node_modules
           zip -r ../../deployment.zip . \
             -x "*.git*" \
-            -x "node_modules/.cache/*" \
             -x ".next/cache/*" \
             -x "*.md" \
-            -x "*.log" \
-            -x "questionnaire-structure.md" \
-            -x "data-model.md" \
-            -x "ux-flow.md" \
-            -x "README.md"
+            -x "*.log"
 
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
