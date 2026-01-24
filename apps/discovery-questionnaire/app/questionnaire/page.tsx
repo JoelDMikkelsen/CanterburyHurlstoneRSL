@@ -119,8 +119,20 @@ export default function QuestionnairePage() {
   const handleAnswerChange = (questionId: string, value: any) => {
     if (!response) return;
 
-    const currentSection = response.sections[currentSectionId];
-    if (!currentSection) return;
+    let currentSection = response.sections[currentSectionId];
+    
+    // Initialize section if it doesn't exist
+    if (!currentSection) {
+      const sectionData = sections.find((s) => s.id === currentSectionId);
+      currentSection = {
+        id: currentSectionId,
+        name: sectionData?.name || "",
+        completed: false,
+        completedAt: null,
+        answers: {},
+        lastModified: new Date().toISOString(),
+      };
+    }
 
     const updatedAnswers = {
       ...currentSection.answers,
@@ -155,8 +167,20 @@ export default function QuestionnairePage() {
     if (currentSectionData) {
       const missingRequired: string[] = [];
       currentSectionData.questions.forEach((q) => {
-        if (q.required && !section.answers[q.id]) {
-          missingRequired.push(q.id);
+        if (q.required) {
+          const answer = section.answers[q.id];
+          // Check if answer exists and is not null/undefined
+          // For arrays/strings, also check they're not empty
+          // For booleans/numbers, false/0 are valid answers
+          const isMissing = 
+            answer === undefined || 
+            answer === null ||
+            (Array.isArray(answer) && answer.length === 0) ||
+            (typeof answer === "string" && answer.trim() === "");
+          
+          if (isMissing) {
+            missingRequired.push(q.id);
+          }
         }
       });
 
@@ -264,15 +288,18 @@ export default function QuestionnairePage() {
                   </div>
 
                   <div className="space-y-8">
-                    {currentSection.questions.map((question) => (
-                      <QuestionRenderer
-                        key={question.id}
-                        question={question}
-                        value={currentSectionState?.answers[question.id]}
-                        onChange={(value) => handleAnswerChange(question.id, value)}
-                        error={errors[question.id]}
-                      />
-                    ))}
+                    {currentSection.questions.map((question) => {
+                      const answerValue = currentSectionState?.answers?.[question.id];
+                      return (
+                        <QuestionRenderer
+                          key={question.id}
+                          question={question}
+                          value={answerValue}
+                          onChange={(value) => handleAnswerChange(question.id, value)}
+                          error={errors[question.id]}
+                        />
+                      );
+                    })}
                   </div>
 
                   <div className="mt-10 pt-6 border-t border-neutral-border flex flex-col sm:flex-row justify-between items-center gap-4">
