@@ -182,3 +182,81 @@ export function calculateProgress(sections: { [key: string]: SectionState }): Pr
     currentSection,
   };
 }
+
+export async function getAllResponses(): Promise<QuestionnaireResponse[]> {
+  try {
+    const client = await getTableClient();
+    const entities = client.listEntities();
+    
+    const responses: QuestionnaireResponse[] = [];
+    
+    for await (const entity of entities) {
+      // Parse JSON string fields back to objects with safe fallbacks
+      let progress: Progress;
+      try {
+        if (entity.progressJson) {
+          progress = JSON.parse(entity.progressJson as string);
+        } else if (entity.progress) {
+          progress = entity.progress as Progress;
+        } else {
+          progress = { totalSections: 11, completedSections: 0, percentComplete: 0, currentSection: 1 };
+        }
+      } catch {
+        progress = { totalSections: 11, completedSections: 0, percentComplete: 0, currentSection: 1 };
+      }
+      
+      let sections: { [key: string]: SectionState };
+      try {
+        if (entity.sectionsJson) {
+          sections = JSON.parse(entity.sectionsJson as string);
+        } else if (entity.sections) {
+          sections = entity.sections as { [key: string]: SectionState };
+        } else {
+          sections = {};
+        }
+      } catch {
+        sections = {};
+      }
+      
+      let metadata: { userEmail: string; userName: string };
+      try {
+        if (entity.metadataJson) {
+          metadata = JSON.parse(entity.metadataJson as string);
+        } else if (entity.metadata) {
+          metadata = entity.metadata as { userEmail: string; userName: string };
+        } else {
+          metadata = { userEmail: "", userName: "" };
+        }
+      } catch {
+        metadata = { userEmail: "", userName: "" };
+      }
+      
+      const response: QuestionnaireResponse = {
+        id: entity.id as string,
+        partitionKey: entity.partitionKey as string,
+        rowKey: entity.rowKey as string,
+        timestamp: entity.timestamp as string,
+        lastUpdated: (entity.lastUpdated as string) || entity.timestamp as string,
+        startedAt: (entity.startedAt as string) || entity.timestamp as string,
+        completedAt: (entity.completedAt as string) || null,
+        progress,
+        sections,
+        metadata,
+      };
+      
+      responses.push(response);
+    }
+    
+    // Sort by completedAt (most recent first), then by lastUpdated
+    responses.sort((a, b) => {
+      const aTime = a.completedAt || a.lastUpdated;
+      const bTime = b.completedAt || b.lastUpdated;
+      return new Date(bTime).getTime() - new Date(aTime).getTime();
+    });
+    
+    return responses;
+  } catch (error: any) {
+    console.error("Error fetching all responses:", error);
+    throw error;
+  }
+}

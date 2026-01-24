@@ -120,12 +120,28 @@ export default function Home() {
                 Sign in with Microsoft
               </button>
             ) : (
-              <Link
-                href="/questionnaire"
-                className="block w-full bg-accent-coral text-white py-4 px-8 rounded-xl font-semibold text-lg hover:bg-accent-coralDark transition-all duration-200 shadow-card hover:shadow-card-hover text-center focus-visible:ring-2 focus-visible:ring-accent-coral focus-visible:ring-offset-2"
-              >
-                Continue to Questionnaire
-              </Link>
+              <div className="space-y-3">
+                <Link
+                  href="/questionnaire"
+                  className="block w-full bg-accent-coral text-white py-4 px-8 rounded-xl font-semibold text-lg hover:bg-accent-coralDark transition-all duration-200 shadow-card hover:shadow-card-hover text-center focus-visible:ring-2 focus-visible:ring-accent-coral focus-visible:ring-offset-2"
+                >
+                  Continue to Questionnaire
+                </Link>
+                {(() => {
+                  const account = accounts[0];
+                  const identity = (account as any).email || account.username || "";
+                  const domain = identity.toLowerCase().split("@")[1];
+                  const isAdmin = domain === "fusion5.com.au" || domain === "fusion5.com";
+                  return isAdmin ? (
+                    <Link
+                      href="/admin"
+                      className="block w-full border-2 border-brand-purple text-brand-purple py-3 px-8 rounded-xl font-semibold text-base hover:bg-brand-purple hover:text-white transition-all duration-200 text-center focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2"
+                    >
+                      Admin - View Responses
+                    </Link>
+                  ) : null;
+                })()}
+              </div>
             )}
           </div>
         </div>

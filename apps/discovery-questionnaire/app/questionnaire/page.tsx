@@ -35,6 +35,34 @@ export default function QuestionnairePage() {
     }
   }, [isAuthenticated, accounts, router]);
 
+  // Initialize section state if missing when currentSectionId changes
+  useEffect(() => {
+    if (!response || !currentSectionId) return;
+    
+    const currentSection = sections.find((s) => s.id === currentSectionId);
+    if (!currentSection) return;
+    
+    if (!response.sections[currentSectionId]) {
+      const newSection: SectionState = {
+        id: currentSectionId,
+        name: currentSection.name,
+        completed: false,
+        completedAt: null,
+        answers: {},
+        lastModified: new Date().toISOString(),
+      };
+      
+      setResponse((prev) => ({
+        ...prev!,
+        sections: {
+          ...prev!.sections,
+          [currentSectionId]: newSection,
+        },
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSectionId]);
+
   const loadResponse = async (): Promise<QuestionnaireResponse | null> => {
     try {
       const account = accounts[0];
@@ -299,7 +327,15 @@ export default function QuestionnairePage() {
   }
 
   const currentSection = sections.find((s) => s.id === currentSectionId);
-  const currentSectionState = response.sections[currentSectionId];
+  // Ensure section state exists - provide fallback if missing
+  const currentSectionState = response.sections[currentSectionId] || (currentSection ? {
+    id: currentSectionId,
+    name: currentSection.name,
+    completed: false,
+    completedAt: null,
+    answers: {},
+    lastModified: new Date().toISOString(),
+  } : null);
   const currentIndex = sections.findIndex((s) => s.id === currentSectionId);
 
   return (
@@ -358,7 +394,9 @@ export default function QuestionnairePage() {
 
                   <div className="space-y-8">
                     {currentSection.questions.map((question) => {
-                      const answerValue = currentSectionState?.answers?.[question.id];
+                      // Ensure we have a section state (use empty answers if missing)
+                      const sectionAnswers = currentSectionState?.answers || {};
+                      const answerValue = sectionAnswers[question.id] ?? undefined;
                       return (
                         <QuestionRenderer
                           key={question.id}
